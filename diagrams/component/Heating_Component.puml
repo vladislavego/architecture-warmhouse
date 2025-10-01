@@ -1,0 +1,19 @@
+@startuml HeatingService_Component
+!includeurl https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+Container(heatingService, "Heating Service", "Java")
+
+Component(api, "HeatingController", "gRPC Endpoint", "Обрабатывает вызовы от API Gateway")
+Component(handler, "HeatingCommandHandler", "Service", "Бизнес-логика обработки команд пользователя и сценариев")
+Component(adapter, "DeviceControlPort", "Adapter", "gRPC-клиент для взаимодействия с DeviceService")
+Component(repo, "HeatingRepository", "JPA Repository", "Хранение состояния отопления")
+Component(kafkaListener, "TelemetryKafkaListener", "Kafka Listener", "Подписка на события телеметрии из Kafka")
+Component(eventHandler, "TelemetryEventHandler", "Service", "Реакция на события: анализ и принятие решения")
+
+Rel(api, handler, "Вызывает")
+Rel(handler, adapter, "Отправка команды на устройство")
+Rel(handler, repo, "Сохраняет состояние")
+Rel(kafkaListener, eventHandler, "Передаёт событие телеметрии")
+Rel(eventHandler, handler, "Может инициировать включение/выключение отопления")
+
+@enduml

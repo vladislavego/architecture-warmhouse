@@ -76,15 +76,24 @@
 
 **Диаграмма контейнеров (Containers)**
 
-Добавьте диаграмму.
+[Умный дом. Контейнеры](diagrams/containers/WarmHouseContainers.png)
 
 **Диаграмма компонентов (Components)**
 
-Добавьте диаграмму для каждого из выделенных микросервисов.
+[Умный дом. Компоненты. Устройства](diagrams/component/DeviceService_Component.png)
+
+[Умный дом. Компоненты. Управление отоплением](diagrams/component/HeatingService_Component.png)
+
+[Умный дом. Компоненты. Телеметрия](diagrams/component/TelemetryService_Component.png)
+
+[Умный дом. Компоненты. Пользователи](diagrams/component/UserService_Component.png)
 
 **Диаграмма кода (Code)**
 
-Добавьте одну диаграмму или несколько.
+[Умный дом. Код. Устройства](diagrams/code/DeviceService_ClassDiagram.png)
+
+[Умный дом. Код. Управление отоплением](diagrams/code/HeatingService_Code.png)
+
 
 # Задание 3. Разработка ER-диаграммы
 
