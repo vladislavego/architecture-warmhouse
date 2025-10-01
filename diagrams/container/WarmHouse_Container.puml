@@ -19,7 +19,7 @@ Rel(api, userService, "gRPC")
 Rel(api, deviceService, "gRPC")
 Rel(api, heatingService, "gRPC")
 Rel(api, telemetryService, "gRPC")
-Rel(telemetryService, kafka, "Публикует события телеметрии")
+Rel(telemetryService, kafka, "Публикует события телеметрии, слушает события устройств")
 Rel(heatingService, kafka, "Слушает события телеметрии")
 Rel(deviceService, kafka, "Публикует события об устройствах добавление / удаление / обновление")
 
