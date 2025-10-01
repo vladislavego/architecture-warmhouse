@@ -1,0 +1,26 @@
+@startuml Warmhouse_Container
+!includeurl https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+Person(user, "User", "Пользователь системы Умный дом")
+
+System_Boundary(warmhouse, "SmartHome System") {
+    Container(frontend, "SmartHome Control Center", "TypeScript (React)", "Интерфейс для управления умным домом")
+    Container(api, "API Gateway", "Spring Boot", "Маршрутизация и авторизация")
+    Container(userService, "User Service", "Java + PostgreSQL", "Регистрация, вход, настройки, данные")
+    Container(deviceService, "Device Service", "Kotlin  + PostgreSQL", "Управление устройствами")
+    Container(heatingService, "Heating Service", "Kotlin  + PostgreSQL", "Логика управления отоплением")
+    Container(telemetryService, "Telemetry Service", "Django + PostgreSQL", "Хранение телеметрии и обработка телеметрии")
+    Container(kafka, "Kafka", "Event Bus", "Асинхронные события между сервисами")
+}
+
+Rel(user, frontend, "Использует", "HTTPS")
+Rel(frontend, api, "HTTPS REST")
+Rel(api, userService, "gRPC")
+Rel(api, deviceService, "gRPC")
+Rel(api, heatingService, "gRPC")
+Rel(api, telemetryService, "gRPC")
+Rel(telemetryService, kafka, "Публикует события телеметрии")
+Rel(heatingService, kafka, "Слушает события телеметрии")
+Rel(deviceService, kafka, "Публикует события об устройствах добавление / удаление / обновление")
+
+@enduml
