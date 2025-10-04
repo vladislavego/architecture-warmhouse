@@ -3,13 +3,15 @@
 
 Container(telemetryService, "Telemetry Service", "Django")
 
-Component(api, "TelemetryGrpcEndpoint", "gRPC Endpoint", "Предоставление телеметрии по запросу")
-Component(collector, "TelemetryCollector", "Service", "Получение телеметрии от устройств")
-Component(repo, "TelemetryRepository", "Repository", "Хранение данных телеметрии")
-Component(eventPublisher, "TelemetryEventProducer", "Kafka Producer", "Публикация событий об изменениях")
+Component(api, "TelemetryGrpcEndpoint", "gRPC Endpoint", "Предоставляет телеметрию по запросу")
+Component(collector, "TelemetryCollector", "Service", "Получает телеметрию от устройств")
+Component(repo, "TelemetryRepository", "Repository", "Работа с данными телеметрии")
+Component(eventPublisher, "TelemetryEventProducer", "Kafka Producer", "Публикует события об изменениях")
+ContainerDb(telemetryDb, "Telemetry DB", "PostgreSQL", "Хранение телеметрии и сенсоров")
 
-Rel(api, repo, "Чтение данных")
+Rel(api, repo, "Читает данные")
 Rel(collector, repo, "Сохраняет телеметрию")
 Rel(collector, eventPublisher, "Публикует в Kafka")
+Rel(repo, telemetryDb, "Читает/пишет", "JDBC")
 
 @enduml

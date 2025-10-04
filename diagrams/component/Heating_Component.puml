@@ -3,16 +3,18 @@
 
 Container(heatingService, "Heating Service", "Java")
 
-Component(api, "HeatingController", "gRPC Endpoint", "Обрабатывает вызовы от API Gateway")
+Component(api, "HeatingGrpcEndpoint", "gRPC Endpoint", "Обрабатывает вызовы от API Gateway")
 Component(handler, "HeatingCommandHandler", "Service", "Бизнес-логика обработки команд пользователя и сценариев")
-Component(adapter, "DeviceControlPort", "Adapter", "gRPC-клиент для взаимодействия с DeviceService")
-Component(repo, "HeatingRepository", "JPA Repository", "Хранение состояния отопления")
+Component(adapter, "DeviceServiceClient", "gRPC", "gRPC-клиент для взаимодействия с DeviceService")
+Component(repo, "HeatingRepository", "Repository", "Работа с состоянием отопления и планами")
 Component(kafkaListener, "TelemetryKafkaListener", "Kafka Listener", "Подписка на события телеметрии из Kafka")
 Component(eventHandler, "TelemetryEventHandler", "Service", "Реакция на события: анализ и принятие решения")
+ContainerDb(heatingDb, "Heating DB", "PostgreSQL", "Хранение состояний отопления и планов")
 
 Rel(api, handler, "Вызывает")
-Rel(handler, adapter, "Отправка команды на устройство")
-Rel(handler, repo, "Сохраняет состояние")
+Rel(handler, adapter, "Отправляет команду устройству")
+Rel(handler, repo, "Сохраняет состояние / план")
+Rel(repo, heatingDb, "Читает/пишет", "JDBC")
 Rel(kafkaListener, eventHandler, "Передаёт событие телеметрии")
 Rel(eventHandler, handler, "Может инициировать включение/выключение отопления")
 

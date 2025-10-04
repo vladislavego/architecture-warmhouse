@@ -4,23 +4,44 @@
 Person(user, "User", "Пользователь системы Умный дом")
 
 System_Boundary(warmhouse, "SmartHome System") {
+
     Container(frontend, "SmartHome Control Center", "TypeScript (React)", "Интерфейс для управления умным домом")
+
     Container(api, "API Gateway", "Spring Boot", "Маршрутизация и авторизация")
-    Container(userService, "User Service", "Java + PostgreSQL", "Настройки и данные пользователя")
-    Container(deviceService, "Device Service", "Kotlin  + PostgreSQL", "Управление устройствами")
-    Container(heatingService, "Heating Service", "Kotlin  + PostgreSQL", "Логика управления отоплением")
-    Container(telemetryService, "Telemetry Service", "Django + PostgreSQL", "Хранение телеметрии и обработка телеметрии")
-    Container(kafka, "Kafka", "Event Bus", "Асинхронные события между сервисами")
+
+    Container(userService, "User Service", "Java", "Настройки и данные пользователя")
+    Container(deviceService, "Device Service", "Kotlin", "Управление устройствами")
+    Container(heatingService, "Heating Service", "Kotlin", "Логика управления отоплением")
+    Container(telemetryService, "Telemetry Service", "Django", "Обработка и хранение телеметрии")
+
+    ContainerDb(userDb, "User DB", "PostgreSQL", "Хранение пользователей и их настроек")
+    ContainerDb(deviceDb, "Device DB", "PostgreSQL", "Хранение домов, устройств и типов")
+    ContainerDb(heatingDb, "Heating DB", "PostgreSQL", "Состояния и планы отопления")
+    ContainerDb(telemetryDb, "Telemetry DB", "PostgreSQL", "Показания сенсоров")
 }
 
+System_Ext(kafka, "Kafka", "Event Bus", "Асинхронная шина событий")
+
 Rel(user, frontend, "Использует", "HTTPS")
-Rel(frontend, api, "HTTPS REST")
+Rel(frontend, api, "Запросы", "REST/HTTPS")
+
+
 Rel(api, userService, "gRPC")
 Rel(api, deviceService, "gRPC")
 Rel(api, heatingService, "gRPC")
 Rel(api, telemetryService, "gRPC")
-Rel(telemetryService, kafka, "Публикует события телеметрии, слушает события устройств")
-Rel(heatingService, kafka, "Слушает события телеметрии")
-Rel(deviceService, kafka, "Публикует события об устройствах добавление / удаление / обновление")
+
+Rel(heatingService, deviceService, "Команды управления устройствами", "gRPC")
+
+Rel(userService, userDb, "JDBC", "SQL")
+Rel(deviceService, deviceDb, "JDBC", "SQL")
+Rel(heatingService, heatingDb, "JDBC", "SQL")
+Rel(telemetryService, telemetryDb, "JDBC", "SQL")
+
+Rel(telemetryService, kafka, "Публикует телеметрию", "Kafka")
+Rel(deviceService, kafka, "Публикует события по устройствам", "Kafka")
+
+Rel(kafka, telemetryService, "Слушает события устройств", "Kafka")
+Rel(kafka, heatingService, "Слушает телеметрию", "Kafka")
 
 @enduml
