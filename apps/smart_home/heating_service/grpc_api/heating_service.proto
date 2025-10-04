@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package heating;
+
+import "google/api/annotations.proto";
+
+service HeatingService {
+  rpc SetHeatingPlan (HeatingPlanRequest) returns (HeatingPlanResponse) {
+    option (google.api.http) = {
+      post: "/v1/heating/plan"
+      body: "*"
+    };
+  }
+
+  rpc GetHeatingPlan (GetHeatingPlanRequest) returns (HeatingPlanResponse) {
+    option (google.api.http) = {
+      get: "/v1/heating/plan/{house_id}"
+    };
+  }
+}
+
+message HeatingPlanRequest {
+  string house_id = 1;
+  string start_time = 2;
+  int32 target_temperature = 3;
+}
+
+message GetHeatingPlanRequest {
+  string house_id = 1;
+}
+
+message HeatingPlanResponse {
+  string house_id = 1;
+  string start_time = 2;
+  int32 target_temperature = 3;
+}

@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package telemetry;
+
+import "google/api/annotations.proto";
+
+service TelemetryService {
+  rpc SubmitTelemetry (TelemetryData) returns (SubmitResponse) {
+    option (google.api.http) = {
+      post: "/v1/telemetry"
+      body: "*"
+    };
+  }
+
+  rpc GetLatestTelemetry (GetTelemetryRequest) returns (TelemetryData) {
+    option (google.api.http) = {
+      get: "/v1/telemetry/{device_id}"
+    };
+  }
+}
+
+message TelemetryData {
+  string device_id = 1;
+  string timestamp = 2;
+  double temperature = 3;
+}
+
+message GetTelemetryRequest {
+  string device_id = 1;
+}
+
+message SubmitResponse {
+  bool success = 1;
+}

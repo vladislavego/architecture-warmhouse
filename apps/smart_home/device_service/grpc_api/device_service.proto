@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package device;
+
+import "google/api/annotations.proto";
+
+service DeviceService {
+  rpc GetDevice (GetDeviceRequest) returns (DeviceResponse) {
+    option (google.api.http) = {
+      get: "/v1/devices/{id}"
+    };
+  }
+
+  rpc RegisterDevice (RegisterDeviceRequest) returns (DeviceResponse) {
+    option (google.api.http) = {
+      post: "/v1/devices"
+      body: "*"
+    };
+  }
+}
+
+message GetDeviceRequest {
+  string id = 1;
+}
+
+message RegisterDeviceRequest {
+  string serial_number = 1;
+  string house_id = 2;
+  string type = 3;
+}
+
+message DeviceResponse {
+  string id = 1;
+  string serial_number = 2;
+  string house_id = 3;
+  string type = 4;
+}
