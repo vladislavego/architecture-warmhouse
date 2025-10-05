@@ -1,34 +1,30 @@
 syntax = "proto3";
 
-package telemetry;
+package telemetry.v1;
+option go_package = "smarthome/telemetry_service/grpc_api";
 
 import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
 
+// TelemetryService предоставляет API для получения телеметрии с устройств.
 service TelemetryService {
-  rpc SubmitTelemetry (TelemetryData) returns (SubmitResponse) {
+  // Получить последние показания телеметрии по ID устройства
+  rpc GetLatestTelemetry(GetTelemetryRequest) returns (TelemetryResponse) {
     option (google.api.http) = {
-      post: "/v1/telemetry"
-      body: "*"
+      get: "/v1/telemetry/{device_id}/latest"
     };
   }
-
-  rpc GetLatestTelemetry (GetTelemetryRequest) returns (TelemetryData) {
-    option (google.api.http) = {
-      get: "/v1/telemetry/{device_id}"
-    };
-  }
-}
-
-message TelemetryData {
-  string device_id = 1;
-  string timestamp = 2;
-  double temperature = 3;
 }
 
 message GetTelemetryRequest {
   string device_id = 1;
 }
 
-message SubmitResponse {
-  bool success = 1;
+message TelemetryResponse {
+  TelemetryData data = 1;
+}
+
+message TelemetryData {
+  int32 value = 1;
+  google.protobuf.Timestamp timestamp = 2;
 }

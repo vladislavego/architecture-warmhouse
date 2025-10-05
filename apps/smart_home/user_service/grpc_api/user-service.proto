@@ -1,35 +1,66 @@
 syntax = "proto3";
 
-package user;
+package user.v1;
+option go_package = "smarthome/user_service/grpc_api";
 
 import "google/api/annotations.proto";
 
+// UserService предоставляет API для регистрации и управления пользователями.
 service UserService {
-  rpc GetUser (GetUserRequest) returns (UserResponse) {
+  // Получить информацию о пользователе по ID
+  rpc GetUser(GetUserRequest) returns (UserResponse) {
     option (google.api.http) = {
-      get: "/v1/users/{id}"
+      get: "/v1/users/{user_id}"
     };
   }
 
-  rpc CreateUser (CreateUserRequest) returns (UserResponse) {
+  // Зарегистрировать нового пользователя
+  rpc RegisterUser(RegisterUserRequest) returns (UserResponse) {
     option (google.api.http) = {
       post: "/v1/users"
       body: "*"
     };
   }
+
+  // Обновить настройки пользователя
+  rpc UpdateUserSettings(UpdateSettingsRequest) returns (UserResponse) {
+    option (google.api.http) = {
+      put: "/v1/users/{user_id}/settings"
+      body: "*"
+    };
+  }
+
+  // Получить настройки пользователя
+  rpc GetUserSettings(GetUserSettingsRequest) returns (GetUserSettingsResponse) {
+    option (google.api.http) = {
+      get: "/v1/users/{user_id}/settings"
+    };
+  }
 }
 
 message GetUserRequest {
-  string id = 1;
+  string user_id = 1; // Уникальный ID пользователя
 }
 
-message CreateUserRequest {
+message RegisterUserRequest {
   string email = 1;
-  string name = 2;
+  string password = 2;
+}
+
+message UpdateSettingsRequest {
+  string user_id = 1;
+  bool notifications_enabled = 2;
+}
+
+message GetUserSettingsRequest {
+  string user_id = 1;
+}
+
+message GetUserSettingsResponse {
+  bool notifications_enabled = 1;
 }
 
 message UserResponse {
-  string id = 1;
+  string user_id = 1;
   string email = 2;
-  string name = 3;
 }

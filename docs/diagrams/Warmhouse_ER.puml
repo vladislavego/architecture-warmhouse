@@ -25,19 +25,13 @@ table(House) {
 
 table(Device) {
   primary_key(id): UUID
-  type_id: UUID
+  type: string
   house_id: UUID
   status: string
 }
 
-table(DeviceType) {
-  primary_key(id): UUID
-  type: string
-}
-
 User ||--o{ House : "owns >"
 House ||--o{ Device : "contains >"
-Device }o--|| DeviceType : "is >"
 
 table(TelemetrySensor) {
   primary_key(id): UUID
@@ -59,6 +53,7 @@ table(HeatingState) {
   primary_key(id): UUID
   house_id: UUID
   status: string
+  heating_plan_id: UUID
   timestamp: datetime
 }
 
@@ -68,10 +63,10 @@ table(HeatingPlan) {
   temperature: float
   start_time: time
   end_time: time
-  enabled: boolean
 }
 
 House ||--o{ HeatingState : "has history >"
 House ||--o{ HeatingPlan : "uses >"
+HeatingPlan ||--o{ HeatingState: "applied_in >"
 
 @enduml

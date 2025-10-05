@@ -1,37 +1,72 @@
 syntax = "proto3";
 
-package device;
+package device.v1;
+option go_package = "smarthome/device_service/grpc_api";
 
 import "google/api/annotations.proto";
 
+// DeviceService предоставляет API для управления устройствами.
 service DeviceService {
-  rpc GetDevice (GetDeviceRequest) returns (DeviceResponse) {
-    option (google.api.http) = {
-      get: "/v1/devices/{id}"
-    };
-  }
-
-  rpc RegisterDevice (RegisterDeviceRequest) returns (DeviceResponse) {
+  // Добавить новое устройство
+  rpc AddDevice(AddDeviceRequest) returns (DeviceResponse) {
     option (google.api.http) = {
       post: "/v1/devices"
       body: "*"
     };
   }
+
+  // Получить устройство по ID
+  rpc GetDevice(GetDeviceRequest) returns (DeviceResponse) {
+    option (google.api.http) = {
+      get: "/v1/devices/{id}"
+    };
+  }
+
+  // Удалить устройство по ID
+  rpc DeleteDevice(DeleteDeviceRequest) returns (DeleteDeviceResponse) {
+    option (google.api.http) = {
+      delete: "/v1/devices/{id}"
+    };
+  }
+
+  // Изменить состояние устройства (включено/выключено)
+  rpc UpdateDeviceState(UpdateDeviceStateRequest) returns (UpdateDeviceStateResponse) {
+    option (google.api.http) = {
+      put: "/v1/devices/{id}"
+      body: "*"
+    };
+  }
+}
+
+message AddDeviceRequest {
+  string type = 2;
+  string house_id = 3;
 }
 
 message GetDeviceRequest {
   string id = 1;
 }
 
-message RegisterDeviceRequest {
-  string serial_number = 1;
-  string house_id = 2;
-  string type = 3;
+message DeleteDeviceRequest {
+  string id = 1;
+}
+
+message UpdateDeviceStateRequest {
+  string id = 1;
+  string state = 2;
 }
 
 message DeviceResponse {
   string id = 1;
-  string serial_number = 2;
-  string house_id = 3;
-  string type = 4;
+  string type = 3;
+  string house_id = 4;
+  string state = 5;
+}
+
+message DeleteDeviceResponse {
+  bool success = 1;
+}
+
+message UpdateDeviceStateResponse {
+  bool success = 1;
 }
