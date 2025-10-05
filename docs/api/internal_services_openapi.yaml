@@ -353,20 +353,36 @@ definitions:
         type: string
       password:
         type: string
+  v1Sensor:
+    type: object
+    properties:
+      deviceId:
+        type: string
+      senorId:
+        type: string
+      unit:
+        type: string
+      location:
+        type: string
+      data:
+        $ref: '#/definitions/v1TelemetryData'
   v1TelemetryData:
     type: object
     properties:
       value:
         type: integer
         format: int32
-      timestamp:
+      lastUpdated:
         type: string
         format: date-time
   v1TelemetryResponse:
     type: object
     properties:
-      data:
-        $ref: '#/definitions/v1TelemetryData'
+      sensors:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1Sensor'
   v1UpdateDeviceStateResponse:
     type: object
     properties:

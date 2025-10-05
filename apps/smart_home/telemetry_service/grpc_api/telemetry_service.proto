@@ -21,10 +21,18 @@ message GetTelemetryRequest {
 }
 
 message TelemetryResponse {
-  TelemetryData data = 1;
+  repeated Sensor sensors = 1;
+}
+
+message Sensor {
+  string device_id = 1;
+  string senor_id = 2;
+  string unit = 3;
+  string location = 4;
+  TelemetryData data = 5;
 }
 
 message TelemetryData {
   int32 value = 1;
-  google.protobuf.Timestamp timestamp = 2;
+  google.protobuf.Timestamp last_updated = 2;
 }
