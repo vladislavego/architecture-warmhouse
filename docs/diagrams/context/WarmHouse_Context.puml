@@ -3,15 +3,15 @@
 
 LAYOUT_WITH_LEGEND()
 
-Person(user, "Пользователь", "Пользователь системы Умный дом")
+Person(user, "User", "Smart Home system user")
 
-System(system, "Система Умный дом", "Управление устройствами, наблюдение за состоянием дома")
+System(system, "Smart Home System", "Controls devices and monitors home state")
 
-System_Ext(sensor, "Датчик устройства", "Физический сенсор в доме")
-System_Ext(heater, "Устройство умного дома", "Физическое устройство управления (например, отоплением)")
+System_Ext(sensor, "Device Sensor", "Physical sensor located in the house")
+System_Ext(heater, "Smart Home Device", "Physical control device (e.g., heating unit)")
 
-Rel(user, system, "Использует систему")
-Rel(system, sensor, "Запрашивает температуру")
-Rel(system, heater, "Управляет включением/выключением")
+Rel(user, system, "Uses the system")
+Rel(system, sensor, "Requests telemetry data")
+Rel(system, heater, "Controls power on/off")
 
 @enduml

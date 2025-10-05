@@ -3,15 +3,15 @@
 
 Container(deviceService, "Device Service", "Kotlin")
 
-Component(api, "DeviceGrpcEndpoint", "gRPC Endpoint", "Принимает команды по управлению устройствами")
-Component(service, "DeviceService", "Service", "Добавление, удаление, обновление устройств")
-Component(repo, "DeviceRepository", "Repository", "Работа с данными устройств")
-Component(eventProducer, "DeviceEventPublisher", "Kafka Producer", "Публикует события об изменении устройств")
-ContainerDb(deviceDb, "Device DB", "PostgreSQL", "Хранение устройств и домов")
+Component(api, "DeviceGrpcEndpoint", "gRPC Endpoint", "Receives device control commands")
+Component(service, "DeviceService", "Service", "Handles adding, updating, and removing devices")
+Component(repo, "DeviceRepository", "Repository", "Manages device data persistence")
+Component(eventProducer, "DeviceEventPublisher", "Kafka Producer", "Publishes device change events")
+ContainerDb(deviceDb, "Device DB", "PostgreSQL", "Stores devices and related home data")
 
-Rel(api, service, "Передаёт команды")
-Rel(service, repo, "Взаимодействует с")
-Rel(service, eventProducer, "Публикует события")
-Rel(repo, deviceDb, "Читает/пишет", "JDBC")
+Rel(api, service, "Sends commands to")
+Rel(service, repo, "Interacts with")
+Rel(service, eventProducer, "Publishes events")
+Rel(repo, deviceDb, "Reads/Writes", "JDBC")
 
 @enduml

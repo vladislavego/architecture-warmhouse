@@ -60,7 +60,8 @@ table(HeatingState) {
 table(HeatingPlan) {
   primary_key(id): UUID
   house_id: UUID
-  temperature: float
+  temperature_max: float
+  temperature_min: float
   start_time: time
   end_time: time
 }

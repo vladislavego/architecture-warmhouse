@@ -3,13 +3,13 @@
 
 Container(userService, "User Service", "Java")
 
-Component(api, "UserGrpcEndpoint", "gRPC Endpoint", "Обрабатывает вызовы от API Gateway")
-Component(service, "UserService", "Application Service", "Обработка настроек, данных пользователя")
-Component(repo, "UserRepository", "Repository", "Работа с данными и настройками пользователя")
-ContainerDb(userDb, "User DB", "PostgreSQL", "Хранение данных и настроек пользователя")
+Component(api, "UserGrpcEndpoint", "gRPC Endpoint", "Handles calls from API Gateway")
+Component(service, "UserService", "Application Service", "Processes user data and settings")
+Component(repo, "UserRepository", "Repository", "Manages user data and settings in the database")
+ContainerDb(userDb, "User DB", "PostgreSQL", "Stores user data and settings")
 
-Rel(api, service, "Вызов")
-Rel(service, repo, "Чтение/запись данных")
-Rel(repo, userDb, "Читает/пишет", "JDBC")
+Rel(api, service, "Calls")
+Rel(service, repo, "Reads/Writes data")
+Rel(repo, userDb, "Reads/Writes", "JDBC")
 
 @enduml
