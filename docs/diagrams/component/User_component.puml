@@ -1,0 +1,15 @@
+@startuml UserService_Component
+!includeurl https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+Container(userService, "User Service", "Java")
+
+Component(api, "UserGrpcEndpoint", "gRPC Endpoint", "Handles calls from API Gateway")
+Component(service, "UserService", "Application Service", "Processes user data and settings")
+Component(repo, "UserRepository", "Repository", "Manages user data and settings in the database")
+ContainerDb(userDb, "User DB", "PostgreSQL", "Stores user data and settings")
+
+Rel(api, service, "Calls")
+Rel(service, repo, "Reads/Writes data")
+Rel(repo, userDb, "Reads/Writes", "JDBC")
+
+@enduml

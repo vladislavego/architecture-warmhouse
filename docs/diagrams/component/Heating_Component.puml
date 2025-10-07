@@ -1,0 +1,26 @@
+@startuml HeatingService_Component
+!includeurl https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+Container_Boundary(heatingService, "Heating Service (Java)") {
+
+  Component(api, "HeatingGrpcEndpoint", "gRPC Endpoint", "Handles calls from API Gateway")
+  Component(handler, "HeatingCommandHandler", "Service", "Business logic for processing user commands and scenarios")
+  Component(adapter, "DeviceServiceClient", "gRPC Client", "Communicates with DeviceService via gRPC")
+  Component(repo, "HeatingRepository", "Repository", "Manages heating states and plans in the database")
+  Component(kafkaListener, "TelemetryKafkaListener", "Kafka Listener", "Listens to telemetry events from Kafka")
+  Component(eventHandler, "TelemetryEventHandler", "Service", "Processes telemetry events and makes decisions")
+  Component(scheduler, "HeatingPlanScheduler", "Background Job / Scheduler", "Periodically checks HeatingPlan and updates HeatingState according to the schedule")
+}
+
+ContainerDb(heatingDb, "Heating DB", "PostgreSQL", "Stores heating states and plans")
+
+Rel(api, handler, "Calls")
+Rel(handler, adapter, "Sends command to device")
+Rel(handler, repo, "Saves state / plan")
+Rel(repo, heatingDb, "Reads/Writes", "JDBC")
+Rel(kafkaListener, eventHandler, "Passes telemetry event")
+Rel(eventHandler, handler, "May trigger heating on/off")
+Rel(scheduler, repo, "Reads active plans")
+Rel(scheduler, handler, "Triggers HeatingState update")
+
+@enduml

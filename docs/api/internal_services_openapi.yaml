@@ -1,0 +1,402 @@
+swagger: "2.0"
+info:
+  title: apps/smart_home/user_service/grpc_api/user-service.proto
+  version: version not set
+tags:
+  - name: UserService
+  - name: DeviceService
+  - name: HeatingService
+  - name: TelemetryService
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /v1/devices:
+    post:
+      summary: Добавить новое устройство
+      operationId: DeviceService_AddDevice
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1DeviceResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v1AddDeviceRequest'
+      tags:
+        - DeviceService
+  /v1/devices/{id}:
+    get:
+      summary: Получить устройство по ID
+      operationId: DeviceService_GetDevice
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1DeviceResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      tags:
+        - DeviceService
+    delete:
+      summary: Удалить устройство по ID
+      operationId: DeviceService_DeleteDevice
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1DeleteDeviceResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      tags:
+        - DeviceService
+    put:
+      summary: Изменить состояние устройства (включено/выключено)
+      operationId: DeviceService_UpdateDeviceState
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1UpdateDeviceStateResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/DeviceServiceUpdateDeviceStateBody'
+      tags:
+        - DeviceService
+  /v1/heating/{houseId}/plan:
+    get:
+      summary: Получить план отопления для дома
+      operationId: HeatingService_GetHeatingPlan
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1HeatingPlanResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: houseId
+          in: path
+          required: true
+          type: string
+      tags:
+        - HeatingService
+    put:
+      summary: Обновить план отопления
+      operationId: HeatingService_UpdateHeatingPlan
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1HeatingPlanResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: houseId
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/HeatingServiceUpdateHeatingPlanBody'
+      tags:
+        - HeatingService
+  /v1/heating/{houseId}/state:
+    put:
+      summary: Изменить состояни устройства (например вкл/выкл)
+      operationId: HeatingService_UpdateHeatingState
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1UpdateHeatingStatusResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: houseId
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/HeatingServiceUpdateHeatingStateBody'
+      tags:
+        - HeatingService
+  /v1/telemetry/{deviceId}/latest:
+    get:
+      summary: Получить последние показания телеметрии по ID устройства
+      operationId: TelemetryService_GetLatestTelemetry
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1TelemetryResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: deviceId
+          in: path
+          required: true
+          type: string
+      tags:
+        - TelemetryService
+  /v1/users:
+    post:
+      summary: Зарегистрировать нового пользователя
+      operationId: UserService_RegisterUser
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1UserResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v1RegisterUserRequest'
+      tags:
+        - UserService
+  /v1/users/{userId}:
+    get:
+      summary: Получить информацию о пользователе по ID
+      operationId: UserService_GetUser
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1UserResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: userId
+          description: Уникальный ID пользователя
+          in: path
+          required: true
+          type: string
+      tags:
+        - UserService
+  /v1/users/{userId}/settings:
+    get:
+      summary: Получить настройки пользователя
+      operationId: UserService_GetUserSettings
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1GetUserSettingsResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          type: string
+      tags:
+        - UserService
+    put:
+      summary: Обновить настройки пользователя
+      operationId: UserService_UpdateUserSettings
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1UserResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/UserServiceUpdateUserSettingsBody'
+      tags:
+        - UserService
+definitions:
+  DeviceServiceUpdateDeviceStateBody:
+    type: object
+    properties:
+      state:
+        type: string
+  HeatingServiceUpdateHeatingPlanBody:
+    type: object
+    properties:
+      planJson:
+        type: string
+  HeatingServiceUpdateHeatingStateBody:
+    type: object
+    properties:
+      state:
+        type: string
+  UserServiceUpdateUserSettingsBody:
+    type: object
+    properties:
+      notificationsEnabled:
+        type: boolean
+  protobufAny:
+    type: object
+    properties:
+      '@type':
+        type: string
+    additionalProperties: {}
+  rpcStatus:
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
+      details:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/protobufAny'
+  v1AddDeviceRequest:
+    type: object
+    properties:
+      type:
+        type: string
+      houseId:
+        type: string
+  v1DeleteDeviceResponse:
+    type: object
+    properties:
+      success:
+        type: boolean
+  v1DeviceResponse:
+    type: object
+    properties:
+      id:
+        type: string
+      type:
+        type: string
+      houseId:
+        type: string
+      state:
+        type: string
+  v1GetUserSettingsResponse:
+    type: object
+    properties:
+      notificationsEnabled:
+        type: boolean
+  v1HeatingPlanResponse:
+    type: object
+    properties:
+      houseId:
+        type: string
+      planJson:
+        type: string
+  v1RegisterUserRequest:
+    type: object
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+  v1Sensor:
+    type: object
+    properties:
+      deviceId:
+        type: string
+      senorId:
+        type: string
+      unit:
+        type: string
+      location:
+        type: string
+      data:
+        $ref: '#/definitions/v1TelemetryData'
+  v1TelemetryData:
+    type: object
+    properties:
+      value:
+        type: integer
+        format: int32
+      lastUpdated:
+        type: string
+        format: date-time
+  v1TelemetryResponse:
+    type: object
+    properties:
+      sensors:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1Sensor'
+  v1UpdateDeviceStateResponse:
+    type: object
+    properties:
+      success:
+        type: boolean
+  v1UpdateHeatingStatusResponse:
+    type: object
+    properties:
+      success:
+        type: boolean
+  v1UserResponse:
+    type: object
+    properties:
+      userId:
+        type: string
+      email:
+        type: string

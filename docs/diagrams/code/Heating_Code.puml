@@ -1,0 +1,27 @@
+@startuml HeatingService_Sequence
+actor User
+participant "HeatingController" as Controller
+participant "HeatingCommandHandler" as Handler
+participant "TelemetryKafkaListener" as KafkaListener
+participant "TelemetryEventHandler" as EventHandler
+participant "DeviceControlPort" as Adapter
+database "HeatingRepository" as Repo
+participant "DeviceService (gRPC)" as DeviceService
+
+== Пользовательская команда ==
+User -> Controller : gRPC: HeatingOnCommand
+Controller -> Handler : handle(HeatingOnCommand)
+Handler -> Adapter : sendCommand("on")
+Adapter -> DeviceService : gRPC: sendCommand("on")
+DeviceService --> Adapter : OK
+Handler -> Repo : save(state=ON)
+
+== Событие телеметрии ==
+KafkaListener -> EventHandler : onTelemetryEvent(temp<18°C)
+EventHandler -> Handler : triggerHeatingOn()
+Handler -> Adapter : sendCommand("on")
+Adapter -> DeviceService : gRPC: sendCommand("on")
+DeviceService --> Adapter : OK
+Handler -> Repo : save(state=ON)
+
+@enduml

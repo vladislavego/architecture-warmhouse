@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package telemetry.v1;
+option go_package = "smarthome/telemetry_service/grpc_api";
+
+import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
+
+// TelemetryService предоставляет API для получения телеметрии с устройств.
+service TelemetryService {
+  // Получить последние показания телеметрии по ID устройства
+  rpc GetLatestTelemetry(GetTelemetryRequest) returns (TelemetryResponse) {
+    option (google.api.http) = {
+      get: "/v1/telemetry/{device_id}/latest"
+    };
+  }
+}
+
+message GetTelemetryRequest {
+  string device_id = 1;
+}
+
+message TelemetryResponse {
+  repeated Sensor sensors = 1;
+}
+
+message Sensor {
+  string device_id = 1;
+  string senor_id = 2;
+  string unit = 3;
+  string location = 4;
+  TelemetryData data = 5;
+}
+
+message TelemetryData {
+  int32 value = 1;
+  google.protobuf.Timestamp last_updated = 2;
+}

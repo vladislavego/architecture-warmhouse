@@ -1,0 +1,17 @@
+@startuml WarmHouseContext
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+LAYOUT_WITH_LEGEND()
+
+Person(user, "User", "Smart Home system user")
+
+System(system, "Smart Home System", "Controls devices and monitors home state")
+
+System_Ext(sensor, "Device Sensor", "Physical sensor located in the house")
+System_Ext(heater, "Smart Home Device", "Physical control device (e.g., heating unit)")
+
+Rel(user, system, "Uses the system")
+Rel(system, sensor, "Requests telemetry data")
+Rel(system, heater, "Controls power on/off")
+
+@enduml

@@ -1,0 +1,64 @@
+@startuml DeviceService_Classes
+
+class DeviceGrpcEndpoint {
+    +registerDevice(deviceDto: DeviceDto): Response
+    +removeDevice(id: UUID): Response
+    +updateDevice(id: UUID, update: DeviceUpdate): Response
+}
+
+class DeviceService {
+    -repository: DeviceRepository
+    -eventPublisher: DeviceEventPublisher
+
+    +registerDevice(dto: DeviceDto): void
+    +removeDevice(id: UUID): void
+    +updateDevice(id: UUID, update: DeviceUpdate): void
+}
+
+class DeviceRepository {
+    +save(device: Device): void
+    +deleteById(id: UUID): void
+    +findById(id: UUID): Optional<Device>
+    +update(device: Device): void
+}
+
+class DeviceEventPublisher {
+    +publishDeviceRegistered(device: Device): void
+    +publishDeviceRemoved(id: UUID): void
+    +publishDeviceUpdated(device: Device): void
+}
+
+class Device {
+    -id: UUID
+    -type: DeviceType
+    -location: String
+    -status: DeviceStatus
+    +activate(): void
+    +schedule(time: LocalDateTime): void
+    +deactivate(): void
+    +updateLocation(location: String): void
+}
+
+class DeviceDto {
+    +id: UUID
+    +type: DeviceType
+    +location: String
+    +status: DeviceStatus
+}
+
+enum DeviceStatus {
+    ACTIVE
+    INACTIVE
+    SCHEDULED
+}
+
+interface DeviceType
+
+class Heater implements DeviceType {
+    +specificMethodForHeater(): void
+}
+
+DeviceGrpcEndpoint --> DeviceService : передает
+DeviceService --> DeviceRepository : использует
+DeviceService --> DeviceEventPublisher : шлет события
+@enduml

@@ -1,0 +1,17 @@
+@startuml TelemetryService_Component
+!includeurl https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+Container(telemetryService, "Telemetry Service", "Django")
+
+Component(api, "TelemetryGrpcEndpoint", "gRPC Endpoint", "Provides telemetry data on request")
+Component(collector, "TelemetryCollector", "Service", "Receives telemetry data from devices")
+Component(repo, "TelemetryRepository", "Repository", "Handles telemetry data persistence")
+Component(eventPublisher, "TelemetryEventProducer", "Kafka Producer", "Publishes telemetry change events")
+ContainerDb(telemetryDb, "Telemetry DB", "PostgreSQL", "Stores telemetry and sensor data")
+
+Rel(api, repo, "Reads data")
+Rel(collector, repo, "Saves telemetry")
+Rel(collector, eventPublisher, "Publishes to Kafka")
+Rel(repo, telemetryDb, "Reads/Writes", "JDBC")
+
+@enduml

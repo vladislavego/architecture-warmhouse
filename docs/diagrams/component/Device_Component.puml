@@ -1,0 +1,17 @@
+@startuml DeviceService_Component
+!includeurl https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+Container(deviceService, "Device Service", "Kotlin")
+
+Component(api, "DeviceGrpcEndpoint", "gRPC Endpoint", "Receives device control commands")
+Component(service, "DeviceService", "Service", "Handles adding, updating, and removing devices")
+Component(repo, "DeviceRepository", "Repository", "Manages device data persistence")
+Component(eventProducer, "DeviceEventPublisher", "Kafka Producer", "Publishes device change events")
+ContainerDb(deviceDb, "Device DB", "PostgreSQL", "Stores devices and related home data")
+
+Rel(api, service, "Sends commands to")
+Rel(service, repo, "Interacts with")
+Rel(service, eventProducer, "Publishes events")
+Rel(repo, deviceDb, "Reads/Writes", "JDBC")
+
+@enduml

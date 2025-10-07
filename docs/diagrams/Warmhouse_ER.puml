@@ -1,0 +1,85 @@
+@startuml Warmhouse_ER
+!define table(x) class x as "x" << (T,#FFAAAA) >>
+!define primary_key(x) <u>x</u>
+
+table(User) {
+  primary_key(id): UUID
+  email: string
+  name: string
+  created_at: datetime
+}
+
+table(UserSettings) {
+  primary_key(id): UUID
+  user_id: UUID
+  notifications_enabled: boolean
+}
+
+User ||--|| UserSettings : "has"
+
+table(House) {
+  primary_key(id): UUID
+  address: string
+}
+
+table(UserHouse) {
+  <u>user_id</u>: UUID
+  <u>house_id</u>: UUID
+}
+
+table(Device) {
+  primary_key(id): UUID
+  type: string
+  house_id: UUID
+  status: string
+}
+
+
+User ||--o{ UserHouse : "has >"
+House ||--o{ UserHouse : "belongs to >"
+House ||--o{ Device : "contains >"
+
+table(TelemetrySensor) {
+  primary_key(id): UUID
+  device_id: UUID
+  name: string
+  type: string
+  value: float
+  location: string
+  status: string
+  unit: string
+  created_at: datetime
+}
+
+table(TelemetryData) {
+  primary_key(id): UUID
+  sensor_id: UUID
+  value: float
+  checked: datetime
+}
+
+Device ||--o{ TelemetrySensor : "has >"
+TelemetrySensor ||--o{ TelemetryData : "produces >"
+
+table(HeatingState) {
+  primary_key(id): UUID
+  house_id: UUID
+  status: string
+  heating_plan_id: UUID
+  timestamp: datetime
+}
+
+table(HeatingPlan) {
+  primary_key(id): UUID
+  house_id: UUID
+  temperature_max: float
+  temperature_min: float
+  start_time: time
+  end_time: time
+}
+
+House ||--o{ HeatingState : "has history >"
+House ||--o{ HeatingPlan : "uses >"
+HeatingPlan ||--o{ HeatingState: "applied_in >"
+
+@enduml

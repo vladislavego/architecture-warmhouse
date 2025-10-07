@@ -1,0 +1,62 @@
+syntax = "proto3";
+
+package heating.v1;
+option go_package = "smarthome/heating_service/grpc_api";
+
+import "google/api/annotations.proto";
+
+// HeatingService предоставляет API для управления отоплением.
+service HeatingService {
+  // Получить план отопления для дома
+  rpc GetHeatingPlan(GetHeatingPlanRequest) returns (HeatingPlanResponse) {
+    option (google.api.http) = {
+      get: "/v1/heating/{house_id}/plan"
+    };
+  }
+
+  // Обновить план отопления
+  rpc UpdateHeatingPlan(UpdateHeatingPlanRequest) returns (HeatingPlanResponse) {
+    option (google.api.http) = {
+      put: "/v1/heating/{house_id}/plan"
+      body: "*"
+    };
+  }
+
+  // Изменить состояни устройства (например вкл/выкл)
+  rpc UpdateHeatingState(UpdateHeatingStatusRequest) returns (UpdateHeatingStatusResponse) {
+    option (google.api.http) = {
+      put: "/v1/heating/{house_id}/state"
+      body: "*"
+    };
+  }
+}
+
+message GetHeatingPlanRequest {
+  string house_id = 1;
+}
+
+message UpdateHeatingPlanRequest {
+  string house_id = 1;
+  string plan_json = 2;
+}
+
+message UpdateHeatingStatusRequest {
+  string house_id = 1;
+  string state = 2;
+}
+
+message HeatingPlanResponse {
+  string house_id = 1;
+  string plan_json = 2;
+}
+
+message HeatingPlan {
+  string start_time = 1;
+  string end_time = 2;
+  uint64 temperature = 3;
+}
+
+
+message UpdateHeatingStatusResponse {
+  bool success = 1;
+}

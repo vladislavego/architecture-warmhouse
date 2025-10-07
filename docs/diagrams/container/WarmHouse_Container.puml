@@ -1,0 +1,46 @@
+@startuml Warmhouse_Container
+!includeurl https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+Person(user, "User", "Smart Home system user")
+
+System_Boundary(warmhouse, "SmartHome System") {
+
+    Container(frontend, "SmartHome Control Center", "TypeScript (React)", "User interface for managing the smart home")
+
+    Container(api, "API Gateway", "Spring Boot", "Routing and authorization")
+
+    Container(userService, "User Service", "Java", "Manages user data and settings")
+    Container(deviceService, "Device Service", "Kotlin", "Manages devices and device control")
+    Container(heatingService, "Heating Service", "Kotlin", "Handles heating logic and automation")
+    Container(telemetryService, "Telemetry Service", "Django", "Processes and stores telemetry data")
+
+    ContainerDb(userDb, "User DB", "PostgreSQL", "Stores users and their settings")
+    ContainerDb(deviceDb, "Device DB", "PostgreSQL", "Stores homes, devices, and device types")
+    ContainerDb(heatingDb, "Heating DB", "PostgreSQL", "Stores heating states and schedules")
+    ContainerDb(telemetryDb, "Telemetry DB", "PostgreSQL", "Stores sensor readings")
+}
+
+System_Ext(kafka, "Kafka", "Event Bus", "Asynchronous event bus")
+
+Rel(user, frontend, "Uses", "HTTPS")
+Rel(frontend, api, "Sends requests", "REST/HTTPS")
+
+Rel(api, userService, "gRPC")
+Rel(api, deviceService, "gRPC")
+Rel(api, heatingService, "gRPC")
+Rel(api, telemetryService, "gRPC")
+
+Rel(heatingService, deviceService, "Sends device control commands", "gRPC")
+
+Rel(userService, userDb, "Reads/Writes", "JDBC/SQL")
+Rel(deviceService, deviceDb, "Reads/Writes", "JDBC/SQL")
+Rel(heatingService, heatingDb, "Reads/Writes", "JDBC/SQL")
+Rel(telemetryService, telemetryDb, "Reads/Writes", "JDBC/SQL")
+
+Rel(telemetryService, kafka, "Publishes telemetry events", "Kafka")
+Rel(deviceService, kafka, "Publishes device events", "Kafka")
+
+Rel(kafka, telemetryService, "Consumes device events", "Kafka")
+Rel(kafka, heatingService, "Consumes telemetry events", "Kafka")
+
+@enduml
