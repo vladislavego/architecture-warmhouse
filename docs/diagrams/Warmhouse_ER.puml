@@ -19,8 +19,12 @@ User ||--|| UserSettings : "has"
 
 table(House) {
   primary_key(id): UUID
-  user_id: UUID
   address: string
+}
+
+table(UserHouse) {
+  <u>user_id</u>: UUID
+  <u>house_id</u>: UUID
 }
 
 table(Device) {
@@ -30,7 +34,9 @@ table(Device) {
   status: string
 }
 
-User ||--o{ House : "owns >"
+
+User ||--o{ UserHouse : "has >"
+House ||--o{ UserHouse : "belongs to >"
 House ||--o{ Device : "contains >"
 
 table(TelemetrySensor) {
